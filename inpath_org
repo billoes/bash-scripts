@@ -7,16 +7,17 @@ in_path()
 # found and executable; 1 if not. Note that this temporarily modifies
 # the IFS (internal field separator) but restores it upon completion.
 cmd=$1 ourpath=$2 result=1
-if which $cmd ; then
-    #echo the command $cmd is somewhere
-    basdir=$(dirname $(which $cmd))
-    if [[ :$PATH: == *:"$basdir":* ]] ; then
-    
-    #if  echo $PATH | grep $basdir ; then
-    #echo we are in the path!!
-    result=0
-    fi
+oldIFS=$IFS 
+(
+IFS=":"
+for directory in $ourpath
+do
+if [ -x $directory/$cmd ] ; then
+result=0 # If we're here, we found the command.
 fi
+done
+)
+IFS=$oldIFS
 return $result
 }
 checkForCmdInPath()

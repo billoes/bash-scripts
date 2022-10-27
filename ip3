@@ -22,15 +22,16 @@ return $result
 checkForCmdInPath()
 {
 var=$1
-if [ "$var" != "" ] ; then
-    if [ "${var:0:1}" = "/" ] ; then
-        if [ ! -x $var ] ; then
-            return 1
-        fi
-        elif ! in_path $var "$PATH" ; then
-            return 2
-        fi
+in_path $var "$PATH"
+res=$?
+if [[ $res = 0 ]] ; then
+    if  [[ ! -x $(which var) ]] ; then
+        res=2
+    fi
+return $res
 fi
+
+
 }
 
 # standalone part
