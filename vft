@@ -1,0 +1,43 @@
+#!/bin/bash
+# validfloat--Tests whether a number is a valid floating
+# Note that this script cannot accept scientific (1.304e
+# To test whether an entered value is a valid floating-p
+# we need to split the value into two parts: the integer
+# and the fractional portion. We test the first part to 
+# it's a valid integer, and then we test whether the sec
+# valid >=0 integer. So -30.5 evaluates as valid, but -3
+# To include another shell script as part of this one, u
+# notation. Easy enough.
+. validint
+validfloat()
+{
+fvalue="$1"
+decimalPart=""
+# Check whether the input number has a decimal point.
+if  [ ! -z $(echo $fvalue | sed 's/[^.]//g') ] ; then
+# Extract the part before the decimal point.
+decimalPart=$(echo $fvalue | cut -d. -f1)
+fractionalPart="${fvalue#*\.}"
+fi
+if [ -z $decimalPart ] ; then
+    # "!" reverses test logic, so the following is
+    # "if NOT a valid integer"
+    if ! validint "$decimalPart" "" "" ; then
+     echo no dp
+     return 1
+    fi
+    
+fi
+res="$decimalPart"
+echo $decimalPart : $fractionalPart
+
+
+}
+testf(){
+local res=$(validfloat  22.99)
+echo $res
+
+}
+
+testf
+
